@@ -1,5 +1,5 @@
 import { Image } from "expo-image";
-import {Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 export default function HomeScreen() {
   return (
@@ -9,11 +9,7 @@ export default function HomeScreen() {
         source={require("@/assets/images/favicon.png")}
         style={{ width: 128, height: 128 }}
       />
-      <View>
-        <Text className="text-2xl  font-bold">
-          Welcome!
-        </Text>
-      </View>
+      <Text className="text-2xl font-bold">Welcome!</Text>
     </View>
   );
 }
