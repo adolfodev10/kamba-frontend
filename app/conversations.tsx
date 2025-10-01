@@ -1,5 +1,14 @@
-import { StyleSheet, Text, TextInput, View, FlatList, TouchableOpacity, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  FlatList,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import { Ionicons, MaterialIcons, Feather } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 const conversations = [
   {
@@ -65,16 +74,34 @@ export default function ConversationsScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Image source={require("@/assets/images/favicon.png")} style={styles.logo} />
+        <Image
+          source={require("@/assets/images/favicon.png")}
+          style={styles.logo}
+        />
         <View style={styles.headerIcons}>
-          <Ionicons name="camera-outline" size={24} color="#fff" style={styles.icon} />
-          <Feather name="more-vertical" size={24} color="#fff" style={styles.icon} />
+          <Ionicons
+            name="camera-outline"
+            size={24}
+            color="#fff"
+            style={styles.icon}
+          />
+          <Feather
+            name="more-vertical"
+            size={24}
+            color="#fff"
+            style={styles.icon}
+          />
         </View>
       </View>
 
       {/* Search */}
       <View style={styles.searchContainer}>
-        <Ionicons name="search" size={20} color="#999" style={{ marginLeft: 10 }} />
+        <Ionicons
+          name="search"
+          size={20}
+          color="#999"
+          style={{ marginLeft: 10 }}
+        />
         <TextInput
           placeholder="Pesquisar..."
           placeholderTextColor="#999"
@@ -87,7 +114,10 @@ export default function ConversationsScreen() {
         data={conversations}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.chatRow}>
+          <TouchableOpacity
+            onPress={() => router.push("/feed")}
+            style={styles.chatRow}
+          >
             <Image source={{ uri: item.avatar }} style={styles.avatar} />
             <View style={styles.chatInfo}>
               <View style={styles.chatHeader}>
@@ -96,9 +126,19 @@ export default function ConversationsScreen() {
               </View>
               <View style={styles.chatMessageRow}>
                 {item.seen ? (
-                  <MaterialIcons name="done-all" size={18} color="#4EF4C2" style={{ marginRight: 4 }} />
+                  <MaterialIcons
+                    name="done-all"
+                    size={18}
+                    color="#4EF4C2"
+                    style={{ marginRight: 4 }}
+                  />
                 ) : (
-                  <MaterialIcons name="done" size={18} color="#999" style={{ marginRight: 4 }} />
+                  <MaterialIcons
+                    name="done"
+                    size={18}
+                    color="#999"
+                    style={{ marginRight: 4 }}
+                  />
                 )}
                 <Text style={styles.chatMessage} numberOfLines={1}>
                   {item.message}
@@ -220,7 +260,7 @@ const styles = StyleSheet.create({
   },
   tabItem: {
     alignItems: "center",
-    margin:"auto"
+    margin: "auto",
   },
   tabItemActive: {
     alignItems: "center",
