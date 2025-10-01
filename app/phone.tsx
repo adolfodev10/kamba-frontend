@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import {
   View,
   Text,
@@ -8,10 +9,11 @@ import {
 } from "react-native";
 
 export default function PhoneScreen() {
+    const router = useRouter();
   return (
     <View style={styles.container}>
       <Text style={styles.topText}>
-        Prossiga sempre, e tornas-e o{"\n"}melhor Kamba de sempre!
+        Prossiga sempre, e torna-se o{"\n"}melhor Kamba de sempre!
       </Text>
 
       <View style={styles.logoContainer}>
@@ -38,7 +40,10 @@ export default function PhoneScreen() {
         />
       </View>
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity 
+      onPress={() => router.push("/code")}
+      style={styles.button}
+      >
         <Text style={styles.buttonText}>Avançar</Text>
       </TouchableOpacity>
 
