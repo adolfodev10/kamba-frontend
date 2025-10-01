@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, Feather } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 const stories = [
   {
@@ -71,6 +72,8 @@ const posts = [
 ];
 
 export default function FeedScreen() {
+  const router = useRouter();
+
   const renderPost = ({ item }: any) => (
     <View style={styles.card}>
       {/* Header */}
@@ -156,6 +159,31 @@ export default function FeedScreen() {
         renderItem={renderPost}
         showsVerticalScrollIndicator={false}
       />
+
+      <View style={styles.tabBar}>
+        <TouchableOpacity
+          onPress={() => router.push("/feed")}
+          style={styles.tabItem}
+        >
+          <Ionicons name="grid-outline" size={22} color="#4EF4C2" />
+          <Text style={[styles.tabText, { color: "#4EF4C2" }]}>Início</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tabItem}>
+          <Ionicons name="scan-outline" size={22} color="#fff" />
+          <Text style={styles.tabText}>Estados</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => router.push("/conversations")}
+          style={styles.tabItemActive}
+        >
+          <Ionicons name="chatbubble-ellipses-outline" size={22} color="#fff" />
+          <Text style={[styles.tabText]}>Conversas</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tabItem}>
+          <Ionicons name="phone-portrait-outline" size={22} color="#fff" />
+          <Text style={styles.tabText}>Chamadas</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -261,5 +289,26 @@ const styles = StyleSheet.create({
     color: "#4EF4C2",
     fontSize: 14,
     fontWeight: "600",
+  },
+  tabBar: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: "#2f2d2d",
+    paddingVertical: 20,
+    paddingBottom: 90,
+    borderTopWidth: 0.5,
+    borderTopColor: "#444",
+  },
+  tabItem: {
+    alignItems: "center",
+    margin: "auto",
+  },
+  tabItemActive: {
+    alignItems: "center",
+  },
+  tabText: {
+    fontSize: 12,
+    color: "#fff",
+    marginTop: 2,
   },
 });

@@ -32,7 +32,7 @@ export default function HomeScreen() {
             style={styles.picker}
             onValueChange={(itemValue) => setSelectedCountry(itemValue)}
           >
-            <Picker.Item label="Selecione o seu país" value="" />
+            <Picker.Item style={styles.pickerTheme} label="Selecione o seu país" value="" />
             <Picker.Item label="Angola" value="ao" />
             <Picker.Item label="Brazil" value="br" />
             <Picker.Item label="Portugal" value="pt" />
@@ -100,6 +100,11 @@ const styles = StyleSheet.create({
     color: "#FFF",
     width: "100%",
     fontSize: 14,
+    fontWeight: "600",
+  },
+  pickerTheme: {
+    color: "#6E6B6B",
+    fontWeight: "black",
   },
   button: {
     width: "100%",

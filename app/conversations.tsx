@@ -114,10 +114,7 @@ export default function ConversationsScreen() {
         data={conversations}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => router.push("/feed")}
-            style={styles.chatRow}
-          >
+          <TouchableOpacity style={styles.chatRow}>
             <Image source={{ uri: item.avatar }} style={styles.avatar} />
             <View style={styles.chatInfo}>
               <View style={styles.chatHeader}>
@@ -151,7 +148,10 @@ export default function ConversationsScreen() {
 
       {/* Bottom Tabs */}
       <View style={styles.tabBar}>
-        <TouchableOpacity style={styles.tabItem}>
+        <TouchableOpacity
+          onPress={() => router.push("/feed")}
+          style={styles.tabItem}
+        >
           <Ionicons name="home-outline" size={22} color="#fff" />
           <Text style={styles.tabText}>Início</Text>
         </TouchableOpacity>
