@@ -3,11 +3,29 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import { getData } from "country-list";
+import Toast from "react-native-toast-message";
 
 export default function HomeScreen() {
   const [selectedCountry, setSelectedCountry] = useState("");
+  const [hasError, setHasError] = useState(false);
   const router = useRouter();
 
+  const countries = getData().sort((a, b) => a.name.localeCompare(b.name));
+
+  const handleNext = () => {
+    if (!selectedCountry) {
+      setHasError(true);
+      Toast.show({
+        type: "error",
+        text1: "Selecione o seu país",
+        text2: "Por favor, escolha o seu país para continuar.",
+      });
+      return;
+    }
+    setHasError(false);
+    router.push("/phone");
+  }
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -23,39 +41,43 @@ export default function HomeScreen() {
           Comece agora uma nova jornada {"\n"} com os seus Kambas!
         </Text>
 
-        <View
-          style={styles.pickerContainer}
-        >
+        <View style={[styles.pickerContainer, hasError && { borderColor: "#FF6BB6B" }]}>
           <Picker
             selectedValue={selectedCountry}
             dropdownIconColor="#fff"
             style={styles.picker}
-            onValueChange={(itemValue) => setSelectedCountry(itemValue)}
+            onValueChange={(itemValue) =>{
+               setSelectedCountry(itemValue)
+              setHasError(false);
+              }}
           >
-            <Picker.Item style={styles.pickerTheme} label="Selecione o seu país" value="" />
-            <Picker.Item label="Angola" value="ao" />
-            <Picker.Item label="Brazil" value="br" />
-            <Picker.Item label="Portugal" value="pt" />
-            <Picker.Item label="Moçambique" value="mz" />
-            <Picker.Item label="Congo" value="cg" />
-            <Picker.Item label="Estados Unidos" value="us" />
+            <Picker.Item
+              style={styles.pickerTheme}
+              label="Selecione o seu país"
+              value=""
+            />
+            {countries.map((country) => (
+              <Picker.Item
+                key={country.code}
+                label={country.name}
+                value={country.code.toLowerCase()}
+              />
+            ))}
           </Picker>
         </View>
 
         <TouchableOpacity
           activeOpacity={0.7}
           style={styles.button}
-          onPress={() => router.push("/phone")}
+          onPress={handleNext}
         >
-          <Text style={styles.buttonText}>
-            Seguinte
-          </Text>
+          <Text style={styles.buttonText}>Seguinte</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.footer}>
         <Text style={styles.version}>Versão 1.0</Text>
-        <Text style={styles.copyright}>© Kamba 2024</Text>
+        <Text style={styles.copyright}>© Kamba 2025</Text>
       </View>
     </View>
   );
@@ -91,7 +113,7 @@ const styles = StyleSheet.create({
   pickerContainer: {
     width: "100%",
     borderWidth: 1,
-    borderColor:"#555",
+    borderColor: "#555",
     borderRadius: 15,
     backgroundColor: "#3F3D3D",
     marginBottom: 20,

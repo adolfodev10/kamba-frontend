@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -7,9 +8,45 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
+import CountryPicker, { CountryCode } from "react-native-country-picker-modal";
+import Toast from "react-native-toast-message";
 
 export default function PhoneScreen() {
-    const router = useRouter();
+  const router = useRouter();
+  const [phone, setPhone] = useState("");
+  const [country, setCountry] = useState<{
+    cca2: CountryCode;
+    callingCode: string[];
+    flag: string;
+  }>({
+    cca2: "AO",
+    callingCode: ["244"],
+    flag: "🇦🇴",
+  });
+
+  const onSelectCountry = (c: any) => {
+    setCountry({
+      cca2: c.cca2,
+      callingCode: c.callingCode,
+      flag: c.flag,
+    });
+  };
+
+  const handleNext = () => {
+    const cleanedPhone = phone.replace(/\D/g, "");
+    if (!cleanedPhone || cleanedPhone.length < 5) {
+      Toast.show({
+        type: "error",
+        text1: "Por favor insira um número de telefone válido!",
+      });
+      return;
+    }
+
+    const fullNumber = `+${country.callingCode[0]}${cleanedPhone}`;
+    console.log("Número completo:", fullNumber);
+    router.push("/code");
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.topText}>
@@ -25,25 +62,28 @@ export default function PhoneScreen() {
       </View>
 
       <View style={styles.inputWrapper}>
-        <View style={styles.prefix}>
-          <Image
-            source={{ uri: "https://flagcdn.com/w20/ao.png" }} // bandeira Angola
-            style={styles.flag}
-          />
-          <Text style={styles.prefixText}>+244</Text>
-        </View>
+        <CountryPicker
+          countryCode={country.cca2}
+          withCallingCode
+          withFilter
+          withFlag
+          withAlphaFilter
+          onSelect={onSelectCountry}
+          containerButtonStyle={styles.prefix}
+        />
+        <Text style={styles.prefixText}>{`+${country.callingCode[0]}`}</Text>
+
         <TextInput
           style={styles.input}
           placeholder="Número de telefone"
           placeholderTextColor="#aaa"
           keyboardType="phone-pad"
+          value={phone}
+          onChangeText={setPhone}
         />
       </View>
 
-      <TouchableOpacity 
-      onPress={() => router.push("/code")}
-      style={styles.button}
-      >
+      <TouchableOpacity onPress={handleNext} style={styles.button}>
         <Text style={styles.buttonText}>Avançar</Text>
       </TouchableOpacity>
 
@@ -68,7 +108,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     textAlign: "left",
-    margin: "auto",
     marginBottom: 30,
   },
   logoContainer: {
@@ -90,19 +129,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   prefix: {
-    flexDirection: "row",
-    alignItems: "center",
     marginRight: 8,
-  },
-  flag: {
-    width: 24,
-    height: 16,
-    marginRight: 6,
   },
   prefixText: {
     color: "#fff",
     fontSize: 14,
     fontWeight: "600",
+    marginRight: 6,
   },
   input: {
     flex: 1,

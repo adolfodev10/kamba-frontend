@@ -1,0 +1,7 @@
+{
+  "welcome": "Commencez un nouveau voyage avec vos amis!",
+  "selectCountry": "Sélectionnez votre pays",
+  "next": "Suivant",
+  "version": "Version {{number}}",
+  "copyright": "© Kamba {{year}}"
+}

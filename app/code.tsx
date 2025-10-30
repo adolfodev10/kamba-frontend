@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,11 +7,41 @@ import {
   View,
 } from "react-native";
 import { Image } from "expo-image";
-import { router } from "expo-router";
+import * as Notifications from "expo-notifications";
+import Toast from "react-native-toast-message";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
 
 export default function CodeScreen() {
   const [code, setCode] = useState(["", "", "", "", ""]);
+  const [generatedCode, setGeneratedCode] = useState("");
   const inputs = useRef<(TextInput | null)[]>([]);
+
+  useEffect(() => {
+    Notifications.requestPermissionsAsync();
+    generateAndSendCode();
+  }, []);
+
+  const generateAndSendCode = async () => {
+    const randomCode = Math.floor(10000 + Math.random() * 90000).toString();
+    setGeneratedCode(randomCode);
+
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Seu código de verificação",
+        body: `Seu código é ${randomCode}`,
+      },
+      trigger: null, // envia imediatamente
+    });
+  };
 
   const handleChange = (text: string, index: number) => {
     const newCode = [...code];
@@ -26,7 +56,19 @@ export default function CodeScreen() {
   const handleSubmit = () => {
     const finalCode = code.join("");
     console.log("Código inserido:", finalCode);
-    router.push("/conversations");
+    if (finalCode === generatedCode) {
+      Toast.show({
+        type: "success",
+        text1: "Sucesso",
+        text2: "Código verificado com sucesso!",
+      });
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Erro",
+        text2: "Código incorreto. Tente novamente.",
+      });
+    }
   };
 
   return (
@@ -36,12 +78,14 @@ export default function CodeScreen() {
         style={styles.logo}
         contentFit="contain"
       />
-
+      <Text style={styles.title}>Insira o código enviado</Text>
       <View style={styles.inputRow}>
         {code.map((digit, index) => (
           <TextInput
             key={index}
-            ref={(el) => { inputs.current[index] = el; }}
+            ref={(el) => {
+              inputs.current[index] = el;
+            }}
             style={styles.input}
             value={digit}
             onChangeText={(text) => handleChange(text, index)}
@@ -59,7 +103,9 @@ export default function CodeScreen() {
       <TouchableOpacity
         style={[
           styles.button,
-          code.join("").length === 5 ? styles.buttonActive : styles.buttonDisabled,
+          code.join("").length === 5
+            ? styles.buttonActive
+            : styles.buttonDisabled,
         ]}
         disabled={code.join("").length !== 5}
         onPress={handleSubmit}
