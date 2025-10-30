@@ -9,6 +9,7 @@ import {
 import { Image } from "expo-image";
 import * as Notifications from "expo-notifications";
 import Toast from "react-native-toast-message";
+import { router } from "expo-router";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -69,6 +70,9 @@ export default function CodeScreen() {
         text2: "Código incorreto. Tente novamente.",
       });
     }
+    setTimeout(() => {
+      router.push("/conversations");
+    }, 1200);
   };
 
   return (
